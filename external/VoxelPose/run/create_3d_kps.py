@@ -126,19 +126,19 @@ def main():
     normalize = transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-    test_dataset = eval('dataset.' + config.DATASET.TEST_DATASET)(
-        config, config.DATASET.TEST_SUBSET, False, os.path.join(config.DATASET.ROOT, f"{experiment_name}_2d_kps.pkl"),
-        transforms.Compose([
-            transforms.ToTensor(),
-            normalize,
-        ]))
+    # test_dataset = eval('dataset.' + config.DATASET.TEST_DATASET)(
+    #     config, config.DATASET.TEST_SUBSET, False, os.path.join(config.DATASET.ROOT, f"{experiment_name}_2d_kps.pkl"),
+    #     transforms.Compose([
+    #         transforms.ToTensor(),
+    #         normalize,
+    #     ]))
 
-    test_loader = torch.utils.data.DataLoader(
-        test_dataset,
-        batch_size=1,
-        shuffle=False,
-        num_workers=0,
-        pin_memory=True)
+    # test_loader = torch.utils.data.DataLoader(
+    #     test_dataset,
+    #     batch_size=1,
+    #     shuffle=False,
+    #     num_workers=0,
+    #     pin_memory=True)
 
     cudnn.benchmark = config.CUDNN.BENCHMARK
     torch.backends.cudnn.deterministic = config.CUDNN.DETERMINISTIC
