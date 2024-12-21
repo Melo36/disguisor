@@ -126,34 +126,30 @@ def main():
     normalize = transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-    # test_dataset = eval('dataset.' + config.DATASET.TEST_DATASET)(
-    #     config, config.DATASET.TEST_SUBSET, False, os.path.join(config.DATASET.ROOT, f"{experiment_name}_2d_kps.pkl"),
-    #     transforms.Compose([
-    #         transforms.ToTensor(),
-    #         normalize,
-    #     ]))
+    test_dataset = eval('dataset.' + config.DATASET.TEST_DATASET)(
+        config, config.DATASET.TEST_SUBSET, False, os.path.join(config.DATASET.ROOT, f"{experiment_name}_2d_kps.pkl"),
+        transforms.Compose([
+            transforms.ToTensor(),
+            normalize,
+        ]))
 
-    # test_loader = torch.utils.data.DataLoader(
-    #     test_dataset,
-    #     batch_size=1,
-    #     shuffle=False,
-    #     num_workers=0,
-    #     pin_memory=True)
-
-    cudnn.benchmark = config.CUDNN.BENCHMARK
-    torch.backends.cudnn.deterministic = config.CUDNN.DETERMINISTIC
-    torch.backends.cudnn.enabled = config.CUDNN.ENABLED
+    test_loader = torch.utils.data.DataLoader(
+        test_dataset,
+        batch_size=1,
+        shuffle=False,
+        num_workers=0,
+        pin_memory=False)
 
     print('=> Constructing models ..')
     model = eval('models.' + config.MODEL + '.get_multi_person_pose_net')(
         config,is_train=False)
     with torch.no_grad():
-        model = torch.nn.DataParallel(model, device_ids=gpus).cuda()
+        model = model.to('cpu')
 
     test_model_file = MODEL_PATH
     if config.TEST.MODEL_FILE and os.path.isfile(test_model_file):
         print('=> load models state {}'.format(test_model_file))
-        model.module.load_state_dict(torch.load(test_model_file))
+        model.load_state_dict(torch.load(test_model_file, map_location='cpu'))
     else:
         raise ValueError('Check the model file for testing!')
 

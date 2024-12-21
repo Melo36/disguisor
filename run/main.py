@@ -14,6 +14,7 @@ from core.render import render
 
 
 def write_images(config, anonymized_data, frame_id):
+    print("Number 1")
     output_path = os.path.join("output", config.experiment)
     anonymized_images_path = os.path.join(output_path, "anonymized_images")
     os.makedirs(anonymized_images_path, exist_ok=True)
@@ -28,6 +29,7 @@ def write_images(config, anonymized_data, frame_id):
 
 
 def anonymize(config, data_loader):
+    print("Number 2")
     for i, data in tqdm(enumerate(data_loader), total=len(data_loader)):
         batched_head_mesh_data, batched_face_mesh_data, batched_pcds_data, batched_textures, batched_frame_ids, batched_person_ids = data
 
@@ -54,6 +56,7 @@ def anonymize(config, data_loader):
 
 
 def main():
+    print("Number 0")
     config = parse_config()
     dataset = DisguisORDataset(config)
     
